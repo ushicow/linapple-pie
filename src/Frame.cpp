@@ -625,6 +625,15 @@ void	FrameDispatchMessage(SDL_Event * e) // process given SDL event
 
     case SDL_KEYDOWN:
 //	    printf("keyb %d is down!\n", mysym);
+            if(mysym == SDLK_KP_MINUS) mysym = SDLK_MINUS;
+            if((mysym >= SDLK_0) && // A.Suzuki
+               (mysym <= SDLK_9) && // 2017.4.24
+               (mymod & KMOD_MODE) &&
+               (buttondown == -1)) {
+                  buttondown = mysym - SDLK_0 - 1;
+                  if(buttondown < 0) buttondown = 9;
+                  break;
+            }
 	    if(mysym >= SDLK_0 && mysym <= SDLK_9 && mymod & KMOD_CTRL) {
 		    FrameQuickState(mysym - SDLK_0, mymod);
 		    break;
@@ -733,6 +742,14 @@ void	FrameDispatchMessage(SDL_Event * e) // process given SDL event
 
     case SDL_KEYUP:
 //	int mysym = e->key.keysym.sym; // keycode
+        if(mysym == SDLK_KP_MINUS) mysym = SDLK_MINUS;
+        if((mysym >= SDLK_0) && // A.Suzuki
+           (mysym <= SDLK_9) && // 2017.4.24
+           (mymod & KMOD_MODE) &&
+           (buttondown >=0)) {
+              ProcessButtonClick(buttondown, mymod);
+              buttondown = -1;
+        }
 	if ((mysym >= SDLK_F1) && (mysym <= SDLK_F12) && (buttondown == mysym-SDLK_F1))
 	{
 		buttondown = -1;

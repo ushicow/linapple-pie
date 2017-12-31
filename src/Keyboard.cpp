@@ -44,6 +44,7 @@ static bool g_bKeybBufferEnable = false;
 /*static*/ bool  g_bShiftKey = false;
 /*static*/ bool  g_bCtrlKey  = false;
 /*static*/ bool  g_bAltKey   = false;
+/*static*/ bool  g_bAltgrKey = false; // new
 static bool  g_bCapsLock = true;
 static int   lastvirtkey     = 0;	// Current PC keycode
 static BYTE  keycode         = 0;	// Current Apple keycode
@@ -144,6 +145,7 @@ void KeybUpdateCtrlShiftStatus()
 	g_bShiftKey = (keys[SDLK_LSHIFT] | keys[SDLK_RSHIFT]); // 0x8000 KF_UP   SHIFT
 	g_bCtrlKey  = (keys[SDLK_LCTRL]  | keys[SDLK_RCTRL]);	// CTRL
 	g_bAltKey   = (keys[SDLK_LALT]   | keys[SDLK_RALT]);	// ALT
+        g_bAltgrKey =  keys[SDLK_MODE]; // new
 }
 
 //===========================================================================
@@ -189,9 +191,10 @@ void KeybQueueKeypress (int key, BOOL bASCII)
 				case '8': key = '*'; break;
 				case '9': key = '('; break;
 				case '0': key = ')'; break;
-				case '`': key = '~'; break;
+//				case '`': key = '~'; break;
 				case '-': key = '_'; break;
 				case '=': key = '+'; break;
+/* new, no keys
 				case '\\': key = '|'; break;
 				case '[': key = '{'; break;
 				case ']': key = '}'; break;
@@ -199,9 +202,29 @@ void KeybQueueKeypress (int key, BOOL bASCII)
 				case '\'': key = '"'; break;
 				case ',': key = '<'; break;
 				case '.': key = '>'; break;
+*/
+				case '.': key = ','; break; //new
 				case '/': key = '?'; break;
 				default: 	     break;
 			}
+                else if (g_bAltgrKey) // new
+                     switch(key) {
+                                case 'y': key = '{'; break;
+                                case 'u': key = '}'; break;
+                                case 'i': key = '['; break;
+                                case 'o': key = ']'; break;
+                                case 'p': key = '|'; break;
+                                case 'h': key = '<'; break;
+                                case 'j': key = '>'; break;
+                                case 'k': key = '\''; break;
+                                case 'l': key = '"'; break;
+                                case 'b': key = '`'; break;
+                                case 'n': key = '~'; break;
+                                case 'm': key = ':'; break;
+                                case '.': key = ';'; break;
+                                case '/': key = '\\'; break;
+                                default:     break;
+                        }
 		else if (g_bCtrlKey) {
 			if(key >= SDLK_a && key <= SDLK_z) key = key - SDLK_a + 1;
 			else switch(key) {
